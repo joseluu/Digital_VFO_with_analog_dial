@@ -103,7 +103,7 @@ void setup() {
     char str[64];
     //--------- create tasks on core0 --------------------------------
     xTaskCreatePinnedToCore(task0, "Task0", 4096, NULL, 1, NULL, 0);
-        
+#if 0
     //--------- Set up Interrupt Timer -------------------------------
     timer = timerBegin(0, 80, true); //use Timer0, div80 for 1us clock
     timerAttachInterrupt(timer, &onTimer, true);
@@ -143,7 +143,7 @@ void setup() {
     pcnt_counter_pause(PCNT_UNIT_0);
     pcnt_counter_clear(PCNT_UNIT_0);
     pcnt_counter_resume(PCNT_UNIT_0); //Start
-
+#endif
   
     display_init();    
     GRAM_clr();  
