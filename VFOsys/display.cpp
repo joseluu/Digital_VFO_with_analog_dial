@@ -34,7 +34,7 @@ TFT_eSPI tft = TFT_eSPI();  // Invoke library, pins defined in User_Setup.h
 uint8_t R_GRAM[Nx][Ny];
 uint8_t G_GRAM[Nx][Ny];
 uint8_t B_GRAM[Nx][Ny];
-uint16_t GRAM65k[Nx][Ny];
+//uint16_t GRAM65k[Nx][Ny];
 
 void display_init(void) {
   tft.init();
@@ -47,7 +47,7 @@ void display_init(void) {
 
 //-------------------------------------------------------
 void Transfer_Image() {
-  tft.pushImage(0,0,Nx,Ny,&GRAM65k[0][0]);
+  //tft.pushImage(0,0,Nx,Ny,&GRAM65k[0][0]);
 }
 
 
@@ -72,7 +72,7 @@ void trans65k(void){
     for(xps=0; xps<Nx; xps++){
         for(yps=0; yps<Ny; yps++){ 
           col16=(0xf800&(R_GRAM[xps][yps]<<8)) | (0x07E0&(G_GRAM[xps][yps]<<3)) | (0x001F&(B_GRAM[xps][yps]>>3));
-          GRAM65k[xps][yps]=(col16 >> 8) | (col16 << 8);           
+          tft.drawPixel(xps,Ny-yps,(col16 >> 8) | (col16 << 8));           
         }
     }
 }

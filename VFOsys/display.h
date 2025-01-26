@@ -21,7 +21,7 @@
 
 
 #define Xw 128
-#define Yw 150
+#define Yw 180
 
 #define Nx Yw
 #define Ny Xw
