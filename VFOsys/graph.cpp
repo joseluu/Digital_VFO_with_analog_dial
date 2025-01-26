@@ -11,9 +11,9 @@
 #include "graph.h"
 #include "font.h"
 
-uint8_t  R_GRAM;
-uint8_t  B_GRAM;
-uint8_t  G_GRAM;
+static uint8_t  R_GRAM;
+static uint8_t  B_GRAM;
+static uint8_t  G_GRAM;
 
 
 extern TFT_eSPI_extended tft;

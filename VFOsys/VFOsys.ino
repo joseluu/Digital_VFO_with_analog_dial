@@ -68,8 +68,8 @@ uint8_t f_dchange;  // if need to renew display, set this flag to 1
 
 //------------------------------------------------------------------------------
 #define NAME "VFO System"
-#define VERSION "Ver. 1.00"
-#define ID "by JF3HZB"
+#define VERSION "Ver. 1.01"
+#define ID "by JF3HZB mods F1FGV"
 
 
 #include "driver/pcnt.h"
@@ -147,9 +147,9 @@ void setup() {
   
     display_init();    
     GRAM_clr();  
-    sprintf(str,  NAME  ); disp_str16(str,20, 90, 0x00ffff);
-    sprintf(str, VERSION); disp_str12(str,36, 50, 0x00ffff);   
-    sprintf(str,    ID  ); disp_str8(str,50, 20, 0x00ffff);
+    sprintf(str,  NAME  ); disp_str16(str,Nx/2 -60, Ny/2 + 40, 0x00ffff);
+    sprintf(str, VERSION); disp_str12(str,Nx/2 -40, Ny/2 + 10 , 0x00ffff);   
+    sprintf(str,    ID  ); disp_str8(str,Nx/2 -60, Ny/2 -40, 0x00ffff);
     trans65k();
     f_redraw=1;
 
@@ -182,15 +182,17 @@ void loop() {    // (core1)
         boxfill(0,0,Nx-1,Ny-1,cl_BG); 		
         //Display Dial
         Dial(frq);
-         
-        box(7,100,153,126, 0xa0a0a0);
-        box(6,99,154,127, 0xa0a0a0);
+        
+        const uint8_t x_box = Nx/2 - 73;
+        const uint8_t y_box = 100;
+        box(x_box,y_box, x_box+147,y_box + 27, 0xa0a0a0);
+        box(x_box - 1, y_box -1, x_box+146, y_box+26, 0xa0a0a0);
   
         //-------- Display Digital Frquency ---------------------------------------
         sprintf(str, "%3d.%03d,%02d",  frq/1000000, (frq/1000)%1000, (frq/10)%100 );
-        disp_str16(str,17, 105, 0xffd080);              
+        disp_str16(str,x_box + 10, y_box + 5, 0xffd080);              
         sprintf(str, "MHz" );
-        disp_str12(str,120, 106, 0xffd080);
+        disp_str12(str,x_box + 113, y_box + 7, 0xffd080);
           
         if(f_redraw==0){
           trans65k();

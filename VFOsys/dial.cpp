@@ -17,9 +17,9 @@
 extern TFT_eSPI_extended tft;
 
 
-uint8_t  R_GRAM;
-uint8_t  B_GRAM;
-uint8_t  G_GRAM;
+static uint8_t  R_GRAM;
+static uint8_t  B_GRAM;
+static uint8_t  G_GRAM;
 
 int freq_tick = 1000;
 long Dial_font[26][13];
@@ -978,46 +978,41 @@ void Dial(long freq)
     
   if (f_dispmode == 0){
 	  for (xg = D_left; xg <= D_right; xg++) {
-		for (i = yry[xg][1]; i <= yry[xg][0]; i++) {
+      for (i = yry[xg][1]; i <= yry[xg][0]; i++) {
 
-			if ( tft.readPixelR(xg,i) != 0) {
-			  kido = (float)tft.readPixelR(xg,i) / (float)255.0;
-			  ccR = (int)(kido * (float)cR + (1.0 - kido) * (float)dcR + 0.5 );
-			  ccG = (int)(kido * (float)cG + (1.0 - kido) * (float)dcG + 0.5 );
-			  ccB = (int)(kido * (float)cB + (1.0 - kido) * (float)dcB + 1.0 );
-			  if (ccR > 0xFF) ccR = 0xFF;
-			  if (ccG > 0xFF) ccG = 0xFF;
-			  if (ccB > 0xFF) ccB = 0xFF;
-			  R_GRAM = (unsigned char)ccR;
-			  G_GRAM = (unsigned char)ccG;
-			  B_GRAM = (unsigned char)ccB;
-        tft.drawPixelRGB(xg, i, R_GRAM, G_GRAM, B_GRAM);
-			}
-			
-		}
+        if ( tft.readPixelR(xg,i) != 0) {
+          kido = (float)tft.readPixelR(xg,i) / (float)255.0;
+          ccR = (int)(kido * (float)cR + (1.0 - kido) * (float)dcR + 0.5 );
+          ccG = (int)(kido * (float)cG + (1.0 - kido) * (float)dcG + 0.5 );
+          ccB = (int)(kido * (float)cB + (1.0 - kido) * (float)dcB + 1.0 );
+          if (ccR > 0xFF) ccR = 0xFF;
+          if (ccG > 0xFF) ccG = 0xFF;
+          if (ccB > 0xFF) ccB = 0xFF;
+          R_GRAM = (unsigned char)ccR;
+          G_GRAM = (unsigned char)ccG;
+          B_GRAM = (unsigned char)ccB;
+          tft.drawPixelRGB(xg, i, R_GRAM, G_GRAM, B_GRAM);
+        }
+      }
 	  }
-  
   }else{
 
 	  for (xg = D_left; xg <= D_right; xg++) {
-		for (i = yry[xg][1]; i <= yry[xg][0]; i++) {
-
-
-			if ( tft.readPixelR(Nx - 1 - i,xg) != 0) {
-			  kido = (float)tft.readPixelR(Nx - 1 - i,xg) / (float)255.0;
-			  ccR = (int)(kido * (float)cR + (1.0 - kido) * (float)dcR + 0.5);
-			  ccG = (int)(kido * (float)cG + (1.0 - kido) * (float)dcG + 0.5);
-			  ccB = (int)(kido * (float)cB + (1.0 - kido) * (float)dcB + 1.0);
-			  if (ccR > 0xFF) ccR = 0xFF;
-			  if (ccG > 0xFF) ccG = 0xFF;
-			  if (ccB > 0xFF) ccB = 0xFF;
-			  R_GRAM = (unsigned char)ccR;
-			  G_GRAM = (unsigned char)ccG;
-			  B_GRAM = (unsigned char)ccB;
-        tft.drawPixelRGB(Nx - 1 - i, xg, R_GRAM, G_GRAM, B_GRAM);
-			}
-
-		}
+      for (i = yry[xg][1]; i <= yry[xg][0]; i++) {
+        if ( tft.readPixelR(Nx - 1 - i,xg) != 0) {
+          kido = (float)tft.readPixelR(Nx - 1 - i,xg) / (float)255.0;
+          ccR = (int)(kido * (float)cR + (1.0 - kido) * (float)dcR + 0.5);
+          ccG = (int)(kido * (float)cG + (1.0 - kido) * (float)dcG + 0.5);
+          ccB = (int)(kido * (float)cB + (1.0 - kido) * (float)dcB + 1.0);
+          if (ccR > 0xFF) ccR = 0xFF;
+          if (ccG > 0xFF) ccG = 0xFF;
+          if (ccB > 0xFF) ccB = 0xFF;
+          R_GRAM = (unsigned char)ccR;
+          G_GRAM = (unsigned char)ccG;
+          B_GRAM = (unsigned char)ccB;
+          tft.drawPixelRGB(Nx - 1 - i, xg, R_GRAM, G_GRAM, B_GRAM);
+        }
+      }
 	  }
 	  
   }
