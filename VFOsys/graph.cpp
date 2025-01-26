@@ -11,12 +11,15 @@
 #include "graph.h"
 #include "font.h"
 
-extern uint8_t  R_GRAM[Nx][Ny];
-extern uint8_t  B_GRAM[Nx][Ny];
-extern uint8_t  G_GRAM[Nx][Ny];
+uint8_t  R_GRAM;
+uint8_t  B_GRAM;
+uint8_t  G_GRAM;
 
 
-// Claer GRAM ------------------------------------------------------------------
+extern TFT_eSPI_extended tft;
+
+
+// Clear GRAM ------------------------------------------------------------------
 void GRAM_clr(void)
 {
     boxfill(0,0,Nx-1,Ny-1,0);
@@ -38,11 +41,12 @@ void boxfill(int x_min, int y_min, int x_max, int y_max, unsigned long color)
     if(y_max>=Ny) y_max=Ny-1;   
     
     for(k=x_min;k<=x_max; k++){
-        for(j=y_min; j<=y_max; j++){
-			R_GRAM[k][j]=cl_data.byte[2];
-			G_GRAM[k][j]=cl_data.byte[1];
-			B_GRAM[k][j]=cl_data.byte[0];
-		}
+      for(j=y_min; j<=y_max; j++){
+        R_GRAM=cl_data.byte[2];
+        G_GRAM=cl_data.byte[1];
+        B_GRAM=cl_data.byte[0];
+        tft.drawPixelRGB(k, j, R_GRAM, G_GRAM, B_GRAM);
+      }
     }
 }
 
@@ -63,31 +67,35 @@ void line(int xs, int ys,int xe, int ye, unsigned long color)
 	int j;
 	
 	if(dx==0 && dy==0){
-		R_GRAM[xs][ys]=cl_data.byte[2];
-		G_GRAM[xs][ys]=cl_data.byte[1];		
-		B_GRAM[xs][ys]=cl_data.byte[0];		
-		
+		R_GRAM=cl_data.byte[2];
+		G_GRAM=cl_data.byte[1];		
+		B_GRAM=cl_data.byte[0];		
+		tft.drawPixelRGB(xs, ys, R_GRAM, G_GRAM, B_GRAM);
 	} else if(dx==0){
 		if(ystep>0) for(j=ys; j<=ye; j++){
-			R_GRAM[xs][j]=cl_data.byte[2];
-			G_GRAM[xs][j]=cl_data.byte[1];
-			B_GRAM[xs][j]=cl_data.byte[0];
+			R_GRAM=cl_data.byte[2];
+			G_GRAM=cl_data.byte[1];
+			B_GRAM=cl_data.byte[0];
+      tft.drawPixelRGB(xs, j, R_GRAM, G_GRAM, B_GRAM);
 		}
 		if(ystep<0) for(j=ye; j<=ys; j++){
-			R_GRAM[xs][j]=cl_data.byte[2];
-			G_GRAM[xs][j]=cl_data.byte[1];
-			B_GRAM[xs][j]=cl_data.byte[0];			
+			R_GRAM=cl_data.byte[2];
+			G_GRAM=cl_data.byte[1];
+			B_GRAM=cl_data.byte[0];	
+      tft.drawPixelRGB(xs, j, R_GRAM, G_GRAM, B_GRAM);		
 		}
 	} else if(dy==0){
 		if(xstep>0) for(j=xs; j<=xe; j++){
-			R_GRAM[j][ys]=cl_data.byte[2];
-			G_GRAM[j][ys]=cl_data.byte[1];
-			B_GRAM[j][ys]=cl_data.byte[0];						
+			R_GRAM=cl_data.byte[2];
+			G_GRAM=cl_data.byte[1];
+			B_GRAM=cl_data.byte[0];	
+      tft.drawPixelRGB(j, ys, R_GRAM, G_GRAM, B_GRAM);					
 		}
 		if(xstep<0) for(j=xe; j<=xs; j++){
-			R_GRAM[j][ys]=cl_data.byte[2];
-			G_GRAM[j][ys]=cl_data.byte[1];			
-			B_GRAM[j][ys]=cl_data.byte[0];			
+			R_GRAM=cl_data.byte[2];
+			G_GRAM=cl_data.byte[1];			
+			B_GRAM=cl_data.byte[0];	
+      tft.drawPixelRGB(j, ys, R_GRAM, G_GRAM, B_GRAM);		
 		}
 	} else {
 		int xx=xs, yy=ys;
@@ -95,9 +103,10 @@ void line(int xs, int ys,int xe, int ye, unsigned long color)
 			int t = - (dx >> 1);
 			while (1)
 			{
-				R_GRAM[xx][yy]=cl_data.byte[2];
-				G_GRAM[xx][yy]=cl_data.byte[1];
-				B_GRAM[xx][yy]=cl_data.byte[0];
+				R_GRAM=cl_data.byte[2];
+				G_GRAM=cl_data.byte[1];
+				B_GRAM=cl_data.byte[0];
+        tft.drawPixelRGB(xx, yy, R_GRAM, G_GRAM, B_GRAM);
 				if (xx == xe) break;
 				xx += xstep;
 				t  += dy;
@@ -107,9 +116,10 @@ void line(int xs, int ys,int xe, int ye, unsigned long color)
 			int t = - (dy >> 1);
 			while (1)
 			{
-				R_GRAM[xx][yy]=cl_data.byte[2];
-				G_GRAM[xx][yy]=cl_data.byte[1];
-				B_GRAM[xx][yy]=cl_data.byte[0];
+				R_GRAM=cl_data.byte[2];
+				G_GRAM=cl_data.byte[1];
+				B_GRAM=cl_data.byte[0];
+        tft.drawPixelRGB(xx, yy, R_GRAM, G_GRAM, B_GRAM);
 				if (yy == ye) break;
 				yy += ystep;
 				t  += dx;
@@ -230,13 +240,14 @@ int disp_chr8(char c, int x, int y, unsigned long color)
 	if(c=='\\') c=' ';
 	
 	for(k=0; k<5; k++){
-        f8=(unsigned char)bitrev8(font[c-0x20][k]);
+        f8=(unsigned char)bitrev8(font8[c-0x20][k]);
         if(x>=0){
             for(j=0; j<8; j++){
                 if( (f8&0x01)==0x01 ){
-					R_GRAM[x][y+j]=cl_data.byte[2];
-					G_GRAM[x][y+j]=cl_data.byte[1];
-					B_GRAM[x][y+j]=cl_data.byte[0];
+					R_GRAM=cl_data.byte[2];
+					G_GRAM=cl_data.byte[1];
+					B_GRAM=cl_data.byte[0];
+          tft.drawPixelRGB(x, y+j, R_GRAM, G_GRAM, B_GRAM);
 				}
                 f8>>=1;
             }
@@ -277,9 +288,10 @@ int disp_chr12(char c, int x, int y, unsigned long color)
 				yj=y+j;
                 if( (f12&0x0001)==0x0001){
 					if( x>=0 && x<Nx && yj>=0 && yj<Ny ){
-					R_GRAM[x][yj]=cl_data.byte[2];
-					G_GRAM[x][yj]=cl_data.byte[1];
-					B_GRAM[x][yj]=cl_data.byte[0];
+					R_GRAM=cl_data.byte[2];
+					G_GRAM=cl_data.byte[1];
+					B_GRAM=cl_data.byte[0];
+          tft.drawPixelRGB(x, yj, R_GRAM, G_GRAM, B_GRAM);
 					}
 				}
                 f12>>=1;
@@ -315,9 +327,10 @@ int disp_chr16(char c, int x, int y, unsigned long color)
 				yj=y+j;
                 if( (f16&0x0001)==0x0001){
 					if( x>=0 && x<Nx && yj>=0 && yj<Ny ){
-					R_GRAM[x][yj]=cl_data.byte[2];
-					G_GRAM[x][yj]=cl_data.byte[1];
-					B_GRAM[x][yj]=cl_data.byte[0];
+					R_GRAM=cl_data.byte[2];
+					G_GRAM=cl_data.byte[1];
+					B_GRAM=cl_data.byte[0];
+          tft.drawPixelRGB(x, yj, R_GRAM, G_GRAM, B_GRAM);
 					}
 				}
                 f16>>=1;
@@ -350,9 +363,10 @@ int disp_chr20(char c, int x, int y, unsigned long color)
 				yj=y+j;
                 if( (f20&0x00001)==0x00001){
 					if( x>=0 && x<Nx && yj>=0 && yj<Ny ){
-					R_GRAM[x][yj]=cl_data.byte[2];
-					G_GRAM[x][yj]=cl_data.byte[1];
-					B_GRAM[x][yj]=cl_data.byte[0];
+					R_GRAM=cl_data.byte[2];
+					G_GRAM=cl_data.byte[1];
+					B_GRAM=cl_data.byte[0];
+          tft.drawPixelRGB(x, yj, R_GRAM, G_GRAM, B_GRAM);
 					}
 				}
                 f20>>=1;

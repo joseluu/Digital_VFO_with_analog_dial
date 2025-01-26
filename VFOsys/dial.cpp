@@ -13,9 +13,13 @@
 #include "dial.h"
 #include "dial_prm.h"
 
-extern uint8_t  R_GRAM[Nx][Ny];
-extern uint8_t  B_GRAM[Nx][Ny];
-extern uint8_t  G_GRAM[Nx][Ny];
+
+extern TFT_eSPI_extended tft;
+
+
+uint8_t  R_GRAM;
+uint8_t  B_GRAM;
+uint8_t  G_GRAM;
 
 int freq_tick = 1000;
 long Dial_font[26][13];
@@ -282,9 +286,10 @@ void Dial(long freq)
     for (xg = D_left; xg <= D_right; xg++) {
       yg = yry[xg][0];
       for (i = 0; i <= yg; i++) {
-        R_GRAM[xg][i] = 0;
-        G_GRAM[xg][i] = 0;
-        B_GRAM[xg][i] = 0;
+        R_GRAM = 0;
+        G_GRAM = 0;
+        B_GRAM = 0;
+        tft.drawPixelRGB(xg, i, R_GRAM, G_GRAM, B_GRAM);
       }
     }
 
@@ -293,9 +298,10 @@ void Dial(long freq)
     for (xg = D_left; xg <= D_right; xg++) {
       yg = yry[xg][0];
       for (i = 0; i <= yg; i++) {
-        R_GRAM[Nx - 1 - i][xg] = 0;
-        G_GRAM[Nx - 1 - i][xg] = 0;
-        B_GRAM[Nx - 1 - i][xg] = 0;
+        R_GRAM = 0;
+        G_GRAM = 0;
+        B_GRAM = 0;
+        tft.drawPixelRGB(Nx - 1 - i, xg,R_GRAM,G_GRAM,B_GRAM);
       }
     }
 
@@ -974,17 +980,18 @@ void Dial(long freq)
 	  for (xg = D_left; xg <= D_right; xg++) {
 		for (i = yry[xg][1]; i <= yry[xg][0]; i++) {
 
-			if ( R_GRAM[xg][i] != 0) {
-			  kido = (float)R_GRAM[xg][i] / (float)255.0;
+			if ( tft.readPixelR(xg,i) != 0) {
+			  kido = (float)tft.readPixelR(xg,i) / (float)255.0;
 			  ccR = (int)(kido * (float)cR + (1.0 - kido) * (float)dcR + 0.5 );
 			  ccG = (int)(kido * (float)cG + (1.0 - kido) * (float)dcG + 0.5 );
 			  ccB = (int)(kido * (float)cB + (1.0 - kido) * (float)dcB + 1.0 );
 			  if (ccR > 0xFF) ccR = 0xFF;
 			  if (ccG > 0xFF) ccG = 0xFF;
 			  if (ccB > 0xFF) ccB = 0xFF;
-			  R_GRAM[xg][i] = (unsigned char)ccR;
-			  G_GRAM[xg][i] = (unsigned char)ccG;
-			  B_GRAM[xg][i] = (unsigned char)ccB;
+			  R_GRAM = (unsigned char)ccR;
+			  G_GRAM = (unsigned char)ccG;
+			  B_GRAM = (unsigned char)ccB;
+        tft.drawPixelRGB(xg, i, R_GRAM, G_GRAM, B_GRAM);
 			}
 			
 		}
@@ -996,17 +1003,18 @@ void Dial(long freq)
 		for (i = yry[xg][1]; i <= yry[xg][0]; i++) {
 
 
-			if ( R_GRAM[Nx - 1 - i][xg] != 0) {
-			  kido = (float)R_GRAM[Nx - 1 - i][xg] / (float)255.0;
+			if ( tft.readPixelR(Nx - 1 - i,xg) != 0) {
+			  kido = (float)tft.readPixelR(Nx - 1 - i,xg) / (float)255.0;
 			  ccR = (int)(kido * (float)cR + (1.0 - kido) * (float)dcR + 0.5);
 			  ccG = (int)(kido * (float)cG + (1.0 - kido) * (float)dcG + 0.5);
 			  ccB = (int)(kido * (float)cB + (1.0 - kido) * (float)dcB + 1.0);
 			  if (ccR > 0xFF) ccR = 0xFF;
 			  if (ccG > 0xFF) ccG = 0xFF;
 			  if (ccB > 0xFF) ccB = 0xFF;
-			  R_GRAM[Nx - 1 - i][xg] = (unsigned char)ccR;
-			  G_GRAM[Nx - 1 - i][xg] = (unsigned char)ccG;
-			  B_GRAM[Nx - 1 - i][xg] = (unsigned char)ccB;
+			  R_GRAM = (unsigned char)ccR;
+			  G_GRAM = (unsigned char)ccG;
+			  B_GRAM = (unsigned char)ccB;
+        tft.drawPixelRGB(Nx - 1 - i, xg, R_GRAM, G_GRAM, B_GRAM);
 			}
 
 		}
@@ -1032,17 +1040,18 @@ void Dial(long freq)
 	  for (xg = D_left; xg <= D_right; xg++) {
 		for (i = yry[xg][2]; i < yry[xg][1]; i++) {
 
-			if (R_GRAM[xg][i] != 0) {
-			  kido = (float)R_GRAM[xg][i] / (float)255.0;
+			if (tft.readPixelR(xg,i) != 0) {
+			  kido = (float)tft.readPixelR(xg,i) / (float)255.0;
 			  ccR = (int)(kido * (float)cR + (1.0 - kido) * (float)dcR + 0.5);
 			  ccG = (int)(kido * (float)cG + (1.0 - kido) * (float)dcG + 0.5);
 			  ccB = (int)(kido * (float)cB + (1.0 - kido) * (float)dcB + 1.0);
 			  if (ccR > 0xFF) ccR = 0xFF;
 			  if (ccG > 0xFF) ccG = 0xFF;
 			  if (ccB > 0xFF) ccB = 0xFF;
-			  R_GRAM[xg][i] = (unsigned char)ccR;
-			  G_GRAM[xg][i] = (unsigned char)ccG;
-			  B_GRAM[xg][i] = (unsigned char)ccB;
+			  R_GRAM = (unsigned char)ccR;
+			  G_GRAM = (unsigned char)ccG;
+			  B_GRAM = (unsigned char)ccB;
+        tft.drawPixelRGB(xg, i, R_GRAM, G_GRAM, B_GRAM);
 			}
 
 		}
@@ -1053,17 +1062,18 @@ void Dial(long freq)
 	  for (xg = D_left; xg <= D_right; xg++) {
 		for (i = yry[xg][2]; i < yry[xg][1]; i++) {
 
-			if (R_GRAM[Nx - 1 - i][xg] != 0) {
-			  kido = (float)R_GRAM[Nx - 1 - i][xg] / (float)255.0;
+			if (tft.readPixelR(Nx - 1 - i,xg) != 0) {
+			  kido = (float)tft.readPixelR(Nx - 1 - i,xg) / (float)255.0;
 			  ccR = (int)(kido * (float)cR + (1.0 - kido) * (float)dcR + 0.5);
 			  ccG = (int)(kido * (float)cG + (1.0 - kido) * (float)dcG + 0.5);
 			  ccB = (int)(kido * (float)cB + (1.0 - kido) * (float)dcB + 1.0);
 			  if (ccR > 0xFF) ccR = 0xFF;
 			  if (ccG > 0xFF) ccG = 0xFF;
 			  if (ccB > 0xFF) ccB = 0xFF;
-			  R_GRAM[Nx - 1 - i][xg] = (unsigned char)ccR;
-			  G_GRAM[Nx - 1 - i][xg] = (unsigned char)ccG;
-			  B_GRAM[Nx - 1 - i][xg] = (unsigned char)ccB;
+			  R_GRAM = (unsigned char)ccR;
+			  G_GRAM = (unsigned char)ccG;
+			  B_GRAM = (unsigned char)ccB;
+        tft.drawPixelRGB(Nx - 1 - i, xg, R_GRAM, G_GRAM, B_GRAM);
 			}
 		}
 	  }
@@ -1089,17 +1099,18 @@ void Dial(long freq)
 	  for (xg = D_left; xg <= D_right; xg++) {
 		for (i = yry[xg][3]; i < yry[xg][2]; i++) {
 	 
-			if (R_GRAM[xg][i] != 0) {
-			  kido = (float)R_GRAM[xg][i] / (float)255.0;
+			if (tft.readPixelR(xg,i) != 0) {
+			  kido = (float)tft.readPixelR(xg,i) / (float)255.0;
 			  ccR = (int)(kido * (float)cR + (1.0 - kido) * (float)dcR + 0.5);
 			  ccG = (int)(kido * (float)cG + (1.0 - kido) * (float)dcG + 0.5);
 			  ccB = (int)(kido * (float)cB + (1.0 - kido) * (float)dcB + 1.0);
 			  if (ccR > 0xFF) ccR = 0xFF;
 			  if (ccG > 0xFF) ccG = 0xFF;
 			  if (ccB > 0xFF) ccB = 0xFF;
-			  R_GRAM[xg][i] = (unsigned char)ccR;
-			  G_GRAM[xg][i] = (unsigned char)ccG;
-			  B_GRAM[xg][i] = (unsigned char)ccB;
+			  R_GRAM = (unsigned char)ccR;
+			  G_GRAM = (unsigned char)ccG;
+			  B_GRAM = (unsigned char)ccB;
+        tft.drawPixelRGB(xg, i, R_GRAM, G_GRAM, B_GRAM);
 			}
 
 		}
@@ -1110,17 +1121,18 @@ void Dial(long freq)
 	  for (xg = D_left; xg <= D_right; xg++) {
 		for (i = yry[xg][3]; i < yry[xg][2]; i++) {
 
-			if (R_GRAM[Nx - 1 - i][xg] != 0) {
-			  kido = (float)R_GRAM[Nx - 1 - i][xg] / (float)255.0;
+			if (tft.readPixelR(Nx - 1 - i,xg) != 0) {
+			  kido = (float)tft.readPixelR(Nx - 1 - i,xg) / (float)255.0;
 			  ccR = (int)(kido * (float)cR + (1.0 - kido) * (float)dcR + 0.5);
 			  ccG = (int)(kido * (float)cG + (1.0 - kido) * (float)dcG + 0.5);
 			  ccB = (int)(kido * (float)cB + (1.0 - kido) * (float)dcB + 1.0);
 			  if (ccR > 0xFF) ccR = 0xFF;
 			  if (ccG > 0xFF) ccG = 0xFF;
 			  if (ccB > 0xFF) ccB = 0xFF;
-			  R_GRAM[Nx - 1 - i][xg] = (unsigned char)ccR;
-			  G_GRAM[Nx - 1 - i][xg] = (unsigned char)ccG;
-			  B_GRAM[Nx - 1 - i][xg] = (unsigned char)ccB;
+			  R_GRAM = (unsigned char)ccR;
+			  G_GRAM = (unsigned char)ccG;
+			  B_GRAM = (unsigned char)ccB;
+        tft.drawPixelRGB(Nx - 1 - i, xg, R_GRAM, G_GRAM, B_GRAM);
 			}
 
 		}
@@ -1147,17 +1159,18 @@ void Dial(long freq)
 	  for (xg = D_left; xg <= D_right; xg++) {
 		for (i = 0; i < yry[xg][3]; i++) {
 
-			if (R_GRAM[xg][i] != 0) {
-			  kido = (float)R_GRAM[xg][i] / (float)255.0;
+			if (tft.readPixelR(xg,i) != 0) {
+			  kido = (float)tft.readPixelR(xg,i) / (float)255.0;
 			  ccR = (int)(kido * (float)cR + (1.0 - kido) * (float)dcR + 0.5);
 			  ccG = (int)(kido * (float)cG + (1.0 - kido) * (float)dcG + 0.5);
 			  ccB = (int)(kido * (float)cB + (1.0 - kido) * (float)dcB + 1.0);
 			  if (ccR > 0xFF) ccR = 0xFF;
 			  if (ccG > 0xFF) ccG = 0xFF;
 			  if (ccB > 0xFF) ccB = 0xFF;
-			  R_GRAM[xg][i] = (unsigned char)ccR;
-			  G_GRAM[xg][i] = (unsigned char)ccG;
-			  B_GRAM[xg][i] = (unsigned char)ccB;
+			  R_GRAM = (unsigned char)ccR;
+			  G_GRAM = (unsigned char)ccG;
+			  B_GRAM = (unsigned char)ccB;
+        tft.drawPixelRGB(xg, i, R_GRAM, G_GRAM, B_GRAM);
 			}
 
 		}
@@ -1169,17 +1182,18 @@ void Dial(long freq)
 		for (i = 0; i < yry[xg][3]; i++) {
 
 
-			if (R_GRAM[Nx - 1 - i][xg] != 0) {
-			  kido = (float)R_GRAM[Nx - 1 - i][xg] / (float)255.0;
+			if (tft.readPixelR(Nx - 1 - i,xg) != 0) {
+			  kido = (float)tft.readPixelR(Nx - 1 - i,xg) / (float)255.0;
 			  ccR = (int)(kido * (float)cR + (1.0 - kido) * (float)dcR + 0.5);
 			  ccG = (int)(kido * (float)cG + (1.0 - kido) * (float)dcG + 0.5);
 			  ccB = (int)(kido * (float)cB + (1.0 - kido) * (float)dcB + 1.0);
 			  if (ccR > 0xFF) ccR = 0xFF;
 			  if (ccG > 0xFF) ccG = 0xFF;
 			  if (ccB > 0xFF) ccB = 0xFF;
-			  R_GRAM[Nx - 1 - i][xg] = (unsigned char)ccR;
-			  G_GRAM[Nx - 1 - i][xg] = (unsigned char)ccG;
-			  B_GRAM[Nx - 1 - i][xg] = (unsigned char)ccB;
+			  R_GRAM = (unsigned char)ccR;
+			  G_GRAM = (unsigned char)ccG;
+			  B_GRAM = (unsigned char)ccB;
+        tft.drawPixelRGB(Nx - 1 - i, xg, R_GRAM, G_GRAM, B_GRAM);
 			}
 
 		}
@@ -1196,11 +1210,12 @@ void Dial(long freq)
       yg = yry[xg][0];
       for (i = 0; i <= yg; i++) {
 
-        if ((R_GRAM[xg][i] == 0) && (G_GRAM[xg][i] == 0) && (B_GRAM[xg][i] == 0))
+        if ((tft.readPixelR(xg, i) == 0) && (tft.readPixelG(xg, i) == 0) && (tft.readPixelB(xg, i) == 0))
         {
-          R_GRAM[xg][i] = dcR;
-          G_GRAM[xg][i] = dcG;
-          B_GRAM[xg][i] = dcB;
+          R_GRAM = dcR;
+          G_GRAM = dcG;
+          B_GRAM = dcB;
+          tft.drawPixelRGB(xg, i, R_GRAM, G_GRAM, B_GRAM);
         }
       }
     }
@@ -1211,11 +1226,12 @@ void Dial(long freq)
       yg = yry[xg][0];
       for (i = 0; i <= yg; i++) {
 
-        if ((R_GRAM[Nx - 1 - i][xg] == 0) && (G_GRAM[Nx - 1 - i][xg] == 0) && (B_GRAM[Nx - 1 - i][xg] == 0))
+        if ((tft.readPixelR(Nx - 1 - i,xg) == 0) && (tft.readPixelG(Nx - 1 - i,xg) == 0) && (tft.readPixelB(Nx - 1 - i,xg) == 0))
         {
-          R_GRAM[Nx - 1 - i][xg] = dcR;
-          G_GRAM[Nx - 1 - i][xg] = dcG;
-          B_GRAM[Nx - 1 - i][xg] = dcB;
+          R_GRAM = dcR;
+          G_GRAM = dcG;
+          B_GRAM = dcB;
+          tft.drawPixelRGB(Nx - 1 - i, xg, R_GRAM, G_GRAM, B_GRAM);
         }
       }
     }
@@ -1232,9 +1248,10 @@ void Dial(long freq)
 
     for (xg = D_center - (DP_width - 1); xg <= D_center + (DP_width - 1); xg++) {
       for (yg = ypt; yg < (D_height + DP_pos); yg++) {
-        R_GRAM[xg][yg] = (cl_POINTER >> 16) & 0xFF;
-        G_GRAM[xg][yg] = (cl_POINTER >> 8) & 0xFF;
-        B_GRAM[xg][yg] = (cl_POINTER) & 0xFF;
+        R_GRAM = (cl_POINTER >> 16) & 0xFF;
+        G_GRAM = (cl_POINTER >> 8) & 0xFF;
+        B_GRAM = (cl_POINTER) & 0xFF;
+        tft.drawPixelRGB(xg, yg, R_GRAM, G_GRAM, B_GRAM);
       }
     }
 
@@ -1242,9 +1259,10 @@ void Dial(long freq)
 
     for (xg = D_center - (DP_width - 1); xg <= D_center + (DP_width - 1); xg++) {
       for (yg = ypt; yg < (D_height + DP_pos); yg++) {
-        R_GRAM[Nx - 1 - yg][xg] = (cl_POINTER >> 16) & 0xFF;
-        G_GRAM[Nx - 1 - yg][xg] = (cl_POINTER >> 8) & 0xFF;
-        B_GRAM[Nx - 1 - yg][xg] = (cl_POINTER) & 0xFF;
+        R_GRAM = (cl_POINTER >> 16) & 0xFF;
+        G_GRAM = (cl_POINTER >> 8) & 0xFF;
+        B_GRAM = (cl_POINTER) & 0xFF;
+        tft.drawPixelRGB(Nx - 1 - i, xg, R_GRAM, G_GRAM, B_GRAM);
       }
     }
 
@@ -1280,21 +1298,25 @@ void dot(float x, float y)
 		Ryu = ( y - (float)yd );
 
 
-		dat = (int)R_GRAM[xd][yd] + (int)(Rxd * Ryd * 256.0);
+		dat = (int)tft.readPixelR(xd,yd) + (int)(Rxd * Ryd * 256.0);
 		if (dat > 0xFF) dat = 0xFF;
-		R_GRAM[xd][yd] = (unsigned char)dat;
+		R_GRAM = (unsigned char)dat;
+    tft.drawPixelRGB(xd, yd, R_GRAM, 0, 0);
 
-		dat = (unsigned int)R_GRAM[xu][yd] + (unsigned int)(Rxu * Ryd * 256.0);
+		dat = (unsigned int)tft.readPixelR(xu,yd) + (unsigned int)(Rxu * Ryd * 256.0);
 		if (dat > 0xFF) dat = 0xFF;
-		R_GRAM[xu][yd] = (unsigned char)dat;
+		R_GRAM = (unsigned char)dat;
+    tft.drawPixelRGB(xu, yd, R_GRAM, 0, 0);
 
-		dat = (unsigned int)R_GRAM[xd][yu] + (unsigned int)(Rxd * Ryu * 256.0);
+		dat = (unsigned int)tft.readPixelR(xd,yu) + (unsigned int)(Rxd * Ryu * 256.0);
 		if (dat > 0xFF) dat = 0xFF;
-		R_GRAM[xd][yu] = (unsigned char)dat;
+		R_GRAM = (unsigned char)dat;
+    tft.drawPixelRGB(xd, yu, R_GRAM, 0, 0);
 
-		dat = (unsigned int)R_GRAM[xu][yu] + (unsigned int)(Rxu * Ryu * 256.0);
+		dat = (unsigned int)tft.readPixelR(xu,yu) + (unsigned int)(Rxu * Ryu * 256.0);
 		if (dat > 0xFF) dat = 0xFF;
-		R_GRAM[xu][yu] = (unsigned char)dat;
+		R_GRAM = (unsigned char)dat;
+    tft.drawPixelRGB(xu, yu, R_GRAM, 0, 0);
 	  }
   }
 }

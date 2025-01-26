@@ -10,30 +10,13 @@
  *
  */
 
-// if using the official library TFT_eSPI, you must modify the library itself
-// it is usually in your configured sketch directory under libraries
-// on Windows that is: "C:\Users\<name>\Documents\Arduino\libraries"
-// in the library directory must modify User_Setup_Select.h to:
-// comment line 27 #include <User_Setup.h>
-// uncomment the line for this display: #include <User_Setups/Setup22_TTGO_T4_v1.3.h> 
-
-// if using my library: git@github.com:joseluu/TFT_eSPI.git
-// no need to modify it, only include below on your projet
-// the file corresponding for your display copied from the library
-// at location C:\Users\<name>\Documents\Arduino\libraries\TFT_eSPI\User_Setups
-#include "Setup22_TTGO_T4_v1.3.h"
-#define USER_SETUP_LOADED 1
-#include <TFT_eSPI.h> // Graphics and font library for ST7735 driver chip
 
 #include "display.h"
 
-TFT_eSPI tft = TFT_eSPI();  // Invoke library, pins defined in User_Setup.h
+TFT_eSPI_extended tft = TFT_eSPI_extended();  // Invoke library, pins defined in User_Setup.h
 
 // because of memory used by the internal bitmap
 // select "Huge App" in Arduino IDE menu Tools -> PartitionScheme
-uint8_t R_GRAM[Nx][Ny];
-uint8_t G_GRAM[Nx][Ny];
-uint8_t B_GRAM[Nx][Ny];
 //uint16_t GRAM65k[Nx][Ny];
 
 void display_init(void) {
@@ -69,10 +52,10 @@ void d_Command(uint8_t d){
 void trans65k(void){
     int xps, yps;
     uint16_t col16;
-    for(xps=0; xps<Nx; xps++){
-        for(yps=0; yps<Ny; yps++){ 
-          col16=(0xf800&(R_GRAM[xps][yps]<<8)) | (0x07E0&(G_GRAM[xps][yps]<<3)) | (0x001F&(B_GRAM[xps][yps]>>3));
-          tft.drawPixel(xps,Ny-yps,(col16 >> 8) | (col16 << 8));           
-        }
-    }
+    // for(xps=0; xps<Nx; xps++){
+    //     for(yps=0; yps<Ny; yps++){ 
+    //       col16=(0xf800&(R_GRAM[xps][yps]<<8)) | (0x07E0&(G_GRAM[xps][yps]<<3)) | (0x001F&(B_GRAM[xps][yps]>>3));
+    //       tft.drawPixel(xps,Ny-yps,(col16 >> 8) | (col16 << 8));           
+    //     }
+    // }
 }
